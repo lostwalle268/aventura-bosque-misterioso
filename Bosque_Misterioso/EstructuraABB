@@ -1,0 +1,106 @@
+PImage fondo;  // Variable para la imagen de fondo
+
+
+class Nodo {
+  String nombre;
+  Nodo izq;
+  Nodo der;
+
+  Nodo(String nombre) {
+    this.nombre = nombre;
+    izq = null;
+    der = null;
+  }
+  
+  // Mostrar el nombre del nodo dentro de una caja blanca
+  void mostrar() {
+    // los márgenes alrededor del texto
+    float padding = 10;
+    float textWidthValue = textWidth(nombre) + padding * 2; // Ancho del texto con márgenes
+    float textHeightValue = textAscent() + textDescent() + padding * 2; // Alto del texto con márgenes
+    
+    // Dibujar la caja blanca con bordes oscuros
+    fill(255);  // Fondo blanco
+    stroke(0);  // Borde negro
+    rectMode(CENTER);  // Centrar el rectángulo
+    rect(0, 0, textWidthValue, textHeightValue);  // Dibuja el rectángulo
+    
+    // Mostrar el texto del nodo
+    fill(0, 255, 0); // Texto verde
+    textAlign(CENTER, CENTER);  // Alinear el texto en el centro
+    text(nombre, 0, 0);  // Mostrar el nombre del nodo en el centro de la caja
+  }
+}
+
+// Clase Árbol para manejar los nodos
+class Arbol {
+  Nodo raiz;
+  
+  Arbol() {
+    raiz = null;
+  }
+  
+  // Método para insertar nodos manualmente
+  void crearArbol() {
+    raiz = new Nodo("Entrada al bosque");
+    raiz.izq = new Nodo("Arroyo");
+    raiz.der = new Nodo("bosque");
+    
+    raiz.izq.izq = new Nodo("catarata");
+    raiz.izq.der = new Nodo("Bosque profundo");
+    
+    raiz.izq.izq.izq = new Nodo("Hogar de cerdos");
+    raiz.izq.izq.der = new Nodo("Hogar de hipopotamos");
+    
+    raiz.izq.der.der = new Nodo("Deberías haber ido a catarata");
+    
+    raiz.der.izq = new Nodo("Cueva oscura");
+    raiz.der.der = new Nodo("Mundo de nieve");
+  }
+  
+  // Método para mostrar el árbol visualmente
+  void mostrar(Nodo nodo, int x, int y, int xOffset) {
+    if (nodo != null) {
+      pushMatrix();
+      translate(x, y);
+      nodo.mostrar();
+      popMatrix();
+      
+      if (nodo.izq != null) {
+        line(x, y, x - xOffset, y + 100);
+        mostrar(nodo.izq, x - xOffset, y + 100, xOffset / 2);
+      }
+      
+      if (nodo.der != null) {
+        line(x, y, x + xOffset, y + 100);
+        mostrar(nodo.der, x + xOffset, y + 100, xOffset / 2);
+      }
+    }
+  }
+}
+
+// Instancia del árbol
+Arbol arbol;
+
+void setup() {
+  size(800, 600);
+  arbol = new Arbol();
+  
+  // Crear el árbol de decisiones
+  arbol.crearArbol();
+  
+  
+  fondo = loadImage("003-Forest01.jpg");  
+}
+
+void draw() {
+  // 
+  image(fondo, 0, 0, width, height);
+  
+  translate(width / 2, 50);
+  
+  // Mostrar el árbol visualmente
+  arbol.mostrar(arbol.raiz, 0, 0, 200);
+  
+  noLoop(); 
+}
