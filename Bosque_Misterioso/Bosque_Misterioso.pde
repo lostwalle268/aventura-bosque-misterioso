@@ -1,87 +1,127 @@
-// Variables para los botones
-int botonX, botonY, botonAncho, botonAlto;
-int botonIniciarX, botonIniciarY;
-boolean escena1 = false;
-int textoIndex = 0;
-PImage fondo;
-String[] textos = {
-  "¿Ah?... ¿Donde estoy? No recuerdo nada...",
-  "Se siente muy frío el ambiente, creo que será mejor volver a casa...",
-  "Pero... ¿acaso pertenezco a algún lugar? ¿qué o quien soy?",
-  "¿Quien soy?...",
-  "Bueno, creo que es mejor averiguarlo..."
-};
+// Variables globales del juego
+Arbol arbol;
+Nodo nodoActual;
+int imagenIndex = 0;
+boolean enMenu = true;  // Bandera para saber si estamos en el menú
+PImage fondoMenu;
+int botonX, botonY, botonAncho, botonAlto, botonSalirX, botonSalirY;
 
 void setup() {
-  size(800, 600);
-  fondo = loadImage("background-menu.png");
-  // Coordenadas y tamaño de los botones
-  botonX = width/2 - 50;
-  botonY = height / 2 +40;
-  botonAncho = 100;
-  botonAlto = 40;
+  fullScreen();
   
-  botonIniciarX = width / 2 - 50;
-  botonIniciarY = height / 2 - 20;
+  // Cargar la imagen de fondo para el menú
+  fondoMenu = loadImage("background-menu.png");
+  
+  // Crear el árbol binario
+  arbol = new Arbol();
+  
+  // Cargar imágenes de los nodos
+  ArrayList<PImage> imagenesNodo1 = new ArrayList<PImage>();
+  imagenesNodo1.add(loadImage("Instrucciones del juego.png"));
+  imagenesNodo1.add(loadImage("Diálogo entre el mono y el hipopótamo 1.png"));
+  imagenesNodo1.add(loadImage("Diálogo entre el mono y el hipopótamo 2.png"));
+  imagenesNodo1.add(loadImage("Diálogo entre el mono y el hipopótamo 3.png"));
+  imagenesNodo1.add(loadImage("Diálogo entre el mono y el hipopótamo 4.png"));
+  
+  imagenesNodo1.add(loadImage("Diálogo voz del bosque e hipopótamo 1.png"));
+  imagenesNodo1.add(loadImage("Diálogo voz del bosque e hipopótamo 2.png"));
+  imagenesNodo1.add(loadImage("Diálogo voz del bosque e hipopótamo 3.png"));
+  imagenesNodo1.add(loadImage("Diálogo voz del bosque e hipopótamo 4.png"));
+  imagenesNodo1.add(loadImage("Diálogo voz del bosque e hipopótamo 5.png"));
+  imagenesNodo1.add(loadImage("Diálogo voz del bosque e hipopótamo 6.png"));
+  imagenesNodo1.add(loadImage("Diálogo voz del bosque e hipopótamo 7.png"));
+  imagenesNodo1.add(loadImage("Diálogo voz del bosque e hipopótamo 8.png"));
+  imagenesNodo1.add(loadImage("Diálogo voz del bosque e hipopótamo 9.png"));
+  
+  imagenesNodo1.add(loadImage("Dialogo tortuga e hipopótamo 1.png"));
+  imagenesNodo1.add(loadImage("Dialogo tortuga e hipopótamo 2.png"));
+  imagenesNodo1.add(loadImage("Texto negro en el enigma 1 - 1.png"));
+  imagenesNodo1.add(loadImage("Texto negro en el enigma 1 - 2.png"));
+  imagenesNodo1.add(loadImage("Texto negro en el enigma 1 - 3.png"));
+  imagenesNodo1.add(loadImage("Dialogo tortuga e hipopótamo 3.png"));
+  imagenesNodo1.add(loadImage("Dialogo tortuga e hipopótamo 4.png"));
+  imagenesNodo1.add(loadImage("Texto negro en el enigma 1 - 4.png"));
+  imagenesNodo1.add(loadImage("Texto negro en el enigma 1 - 5.png"));
+  imagenesNodo1.add(loadImage("Dialogo tortuga e hipopótamo 5.png"));
+  
+  ArrayList<PImage> imagenesNodo2 = new ArrayList<PImage>();
+  imagenesNodo2.add(loadImage(".png"));
+  imagenesNodo2.add(loadImage("cinematica4.png"));
+  
+  // Agregar nodos al árbol
+  arbol.agregar(200, imagenesNodo1);  // Nodo raíz
+  arbol.agregar(150, imagenesNodo2);
+  
+  // Establecer nodo actual como el nodo raíz
+  nodoActual = arbol.raiz;
+  
+  // Configurar los botones del menú
+  botonAncho = 200;
+  botonAlto = 50;
+  botonX = width / 2 - botonAncho / 2;
+  botonY = height / 2 - botonAlto / 2;
+  
+  botonSalirX= width/2 - botonAncho/2;
+  botonSalirY= width/2 - botonAlto/2-350;
 }
 
 void draw() {
-  if (escena1) {
-    // Escena 1: Pantalla negra con texto
-    background(0);
-    fill(255);
-    textSize(24);
-    textAlign(CENTER, CENTER);
+  if (enMenu) {
+    // Dibujar el menú de inicio
+    image(fondoMenu, 0, 0, width, height);
     
-    if (textoIndex < textos.length) {
-      text(textos[textoIndex], width / 2, height / 2);
-    } else {
-      text("...", width / 2, height / 2);
-    }
-    
-  } else {
-    // Pantalla de inicio
-    image(fondo, 0, 0, width, height);
-    // Botón para salir
-    fill(255, 0, 0);
+    // Dibujar el botón "Iniciar"
+    fill(0, 255, 0);
     rect(botonX, botonY, botonAncho, botonAlto);
     fill(255);
-    textSize(20);
     textAlign(CENTER, CENTER);
-    text("Salir", botonX + botonAncho / 2, botonY + botonAlto / 2);
+    textSize(32);
+    text("Iniciar", botonX + botonAncho / 2, botonY + botonAlto / 2);
     
-    // Botón para iniciar el juego
-    fill(0, 255, 0);
-    rect(botonIniciarX, botonIniciarY, botonAncho, botonAlto);
+    fill(255, 0, 0);
+    rect(botonSalirX, botonSalirY, botonAncho, botonAlto);
     fill(255);
-    text("Iniciar", botonIniciarX + botonAncho / 2, botonIniciarY + botonAlto / 2);
+    textAlign(CENTER, CENTER);
+    textSize(32);
+    text("Salir", botonSalirX + botonAncho / 2, botonSalirY + botonAlto / 2);
+    
+  } else {
+    // Mostrar la imagen actual del nodo en el juego
+    background(0);
+    if (imagenIndex < nodoActual.imagenes.size()) {
+      image(nodoActual.imagenes.get(imagenIndex), 0, 0, width, height);
+    } else {
+      // Al terminar de mostrar las imágenes, mostrar opciones de botones
+      for (int i = 0; i < nodoActual.opciones.length; i++) {
+        if (nodoActual.opciones[i] != null) {
+          nodoActual.opciones[i].mostrar();
+        }
+      }
+    }
   }
 }
 
 void mousePressed() {
-  if (!escena1) {
-    // Verificar si se presionó el botón de salir
+  if (enMenu) {
+    // Verificar si se presionó el botón "Iniciar"
     if (mouseX > botonX && mouseX < botonX + botonAncho && mouseY > botonY && mouseY < botonY + botonAlto) {
-      exit();  // Cerrar el programa
+      enMenu = false;  // Salir del menú e iniciar el juego
     }
-    
-    // Verificar si se presionó el botón de iniciar
-    if (mouseX > botonIniciarX && mouseX < botonIniciarX + botonAncho && mouseY > botonIniciarY && mouseY < botonIniciarY + botonAlto) {
-      escena1 = true;  // Cambiar a la primera escena
+    if (mouseX > botonSalirX && mouseX < botonSalirX + botonAncho && mouseY > botonSalirY && mouseY < botonSalirY + botonAlto) {
+      exit();  // Salir del menú e iniciar el juego
     }
   } else {
-    // En la primera escena, avanzar el texto
-    if (textoIndex < textos.length) {
-      textoIndex++;
-    }
-  }
-}
-
-void keyPressed() {
-  if (escena1 && key == ' ') {
-    // Avanzar el texto con la barra espaciadora
-    if (textoIndex < textos.length) {
-      textoIndex++;
+    if (imagenIndex < nodoActual.imagenes.size()) {
+      imagenIndex++;  // Avanzar a la siguiente imagen en el nodo
+    } else {
+      // Verificar si se presionó un botón de opciones
+      if (nodoActual.opciones[0] != null && nodoActual.opciones[0].esPresionado(mouseX, mouseY)) {
+        arbol.moverIzquierda();  // Mover a la izquierda
+        imagenIndex = 0;  // Reiniciar las imágenes al cambiar de nodo
+      } else if (nodoActual.opciones[1] != null && nodoActual.opciones[1].esPresionado(mouseX, mouseY)) {
+        arbol.moverDerecha();  // Mover a la derecha
+        imagenIndex = 0;
+      }
     }
   }
 }
